@@ -22,20 +22,27 @@
   </style>
 
   <body style="overflow: hidden">
-	<div style="width:100%; display:flex; justify-content:center; align-item:center;">
-		<h1 style="color:#2196f3">TomTom Map</h1>
-	</div>
+    <div
+      style="
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-item: center;
+      "
+    >
+      <h1 style="color: #2196f3">TomTom Map</h1>
+    </div>
     <div style="width: 90%; height: 50%; padding: 50px; overflow: hidden">
       <div id="map" style="min-width: 90%; height: 100%"></div>
     </div>
+
     <script>
       try {
         const API_KEY = "hmpbWcwGNoHAec7oYA8bXPZxigbqO4Ty";
         const APPLICATION_NAME = "Application";
         const APPLICATION_VERSION = "1.0";
 
-        tt.setProductInfo(APPLICATION_NAME, APPLICATION_VERSION);
-
+		//dummy coordinates
         let coordinates = [
           { lng: 75.3284607356425, lat: 12.995868825308122 },
           { lng: 75.32870398841064, lat: 12.995799449041897 },
@@ -77,21 +84,26 @@
         let mapLatitude = 12.995868825308122;
         let longEnd = 75.332093;
         let latEnd = 12.989992;
+
+        tt.setProductInfo(APPLICATION_NAME, APPLICATION_VERSION);
+
         var map = tt.map({
-          key: "hmpbWcwGNoHAec7oYA8bXPZxigbqO4Ty",
+          key: API_KEY,
           center: [mapLongitude, mapLatitude],
           container: "map",
           zoom: 19,
           style: "./originaljson.json",
         });
+
         map.addControl(new tt.NavigationControl(), "top-left");
+
         //map.on("click", function (event) {
         //  marker1.setLngLat(event.lngLat);
         // console.log(event.lngLat);
         //});
+
         var element = document.createElement("div");
         element.id = "marker";
-
         var marker1 = new tt.Marker({ element: element })
           .setLngLat([mapLongitude, mapLatitude])
           .addTo(map);
@@ -100,7 +112,6 @@
         async function calculateRoute(routeOptions, color) {
           const response = await tt.services.calculateRoute(routeOptions);
           const geojson = response.toGeoJson();
-
           map.addLayer({
             id: color,
             type: "line",
@@ -115,10 +126,11 @@
             },
           });
         }
-        function route() {
-          const key = "hmpbWcwGNoHAec7oYA8bXPZxigbqO4Ty";
-          const locations = [marker1.getLngLat(), marker2.getLngLat()];
 
+        //this calculate and highlight nearest path in map
+        function route() {
+          const key = API_KEY;
+          const locations = [marker1.getLngLat(), marker2.getLngLat()];
           calculateRoute({ key: key, locations: locations }, "#2196f3");
           calculateRoute({
             key: key,
@@ -149,7 +161,7 @@
           }, 16); // Update every ~16ms for smoother animation (approximately 60 frames per second)
         }
 
-        // Example: Move the marker smoothly to a new position after 3 seconds
+        //move marker with initial and end point
         var i = 0;
         var initial = [];
         var newPosition = [];
