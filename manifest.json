@@ -1,0 +1,19 @@
+	  {
+		"id":"/TomMap/Tomtom.html",
+		"name":"Tomtom",
+		"short_name":"Tomtom",
+		"start_url":"Tomtom.html",
+		"display":"standalone",
+		"background_color":"#5900b3",
+		"theme_color":"black",
+		"scope": ".",
+		"description":"This is a Tomtom.",
+		"icons":[
+			{
+				"src": "./logo512.png",
+				"sizes": "512X512",
+				"type": "image/png"
+			  }
+	]
+	}
+	

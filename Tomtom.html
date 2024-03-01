@@ -1,0 +1,197 @@
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css"
+    />
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js"></script>
+
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/services/services-web.min.js"></script>
+
+    <link rel="manifest" href="manifest.json" />
+  </head>
+
+  <style>
+    #marker {
+      background-image: url("bus.png");
+      background-size: cover;
+      width: 75px;
+      height: 75px;
+    }
+  </style>
+
+  <body style="overflow: hidden">
+    <div style="width: 95%; height: 50%; padding: 50px; overflow: hidden">
+      <div id="map" style="min-width: 90%; height: 100%"></div>
+    </div>
+    <script>
+      try {
+        const API_KEY = "hmpbWcwGNoHAec7oYA8bXPZxigbqO4Ty";
+        const APPLICATION_NAME = "Application";
+        const APPLICATION_VERSION = "1.0";
+
+        tt.setProductInfo(APPLICATION_NAME, APPLICATION_VERSION);
+
+        let coordinates = [
+          { lng: 75.3284607356425, lat: 12.995868825308122 },
+          { lng: 75.32870398841064, lat: 12.995799449041897 },
+          { lng: 75.32891103035882, lat: 12.995747784198684 },
+          { lng: 75.32900697662706, lat: 12.99572400196611 },
+          { lng: 75.32914216042849, lat: 12.995670171772133 },
+          { lng: 75.32924063159939, lat: 12.99560784589562 },
+          { lng: 75.32930627904517, lat: 12.995650489918148 },
+          { lng: 75.329408116752, lat: 12.995620147056854 },
+          { lng: 75.32943841557298, lat: 12.995519277518213 },
+          { lng: 75.32935088564471, lat: 12.995435629576903 },
+          { lng: 75.32940273460645, lat: 12.995268956059988 },
+          { lng: 75.3294773594817, lat: 12.995073542346262 },
+          { lng: 75.32957442797922, lat: 12.994821777915462 },
+          { lng: 75.32965403694777, lat: 12.994618094508667 },
+          { lng: 75.32972136766156, lat: 12.994453258235112 },
+          { lng: 75.3297634233476, lat: 12.99428877136208 },
+          { lng: 75.32982149608955, lat: 12.994080470503405 },
+          { lng: 75.32985263656809, lat: 12.99385768136763 },
+          { lng: 75.32988942049323, lat: 12.993578779242966 },
+          { lng: 75.32993128498833, lat: 12.993333112699972 },
+          { lng: 75.32997420831839, lat: 12.993090367440644 },
+          { lng: 75.33001360615901, lat: 12.992865750218158 },
+          { lng: 75.33007058887341, lat: 12.992637237402647 },
+          { lng: 75.33015510802133, lat: 12.99238123193085 },
+          { lng: 75.33023700959671, lat: 12.99213203382574 },
+          { lng: 75.33033923767485, lat: 12.991893966184435 },
+          { lng: 75.33047598157276, lat: 12.991713318029866 },
+          { lng: 75.33058952873404, lat: 12.99155980408419 },
+          { lng: 75.33073855942007, lat: 12.991397248465333 },
+          { lng: 75.33096167678505, lat: 12.9911564256832 },
+          { lng: 75.33125122204427, lat: 12.990841098931512 },
+          { lng: 75.33159375594195, lat: 12.99051293478459 },
+          { lng: 75.33183684717679, lat: 12.99027434399288 },
+          { lng: 75.33209658630659, lat: 12.990012953812226 },
+        ];
+
+        let mapLongitude = 75.3284607356425;
+        let mapLatitude = 12.995868825308122;
+        let longEnd = 75.332093;
+        let latEnd = 12.989992;
+        var map = tt.map({
+          key: "hmpbWcwGNoHAec7oYA8bXPZxigbqO4Ty",
+          center: [mapLongitude, mapLatitude],
+          container: "map",
+          zoom: 18,
+          style: "./originaljson.json",
+        });
+        map.addControl(new tt.NavigationControl(), "top-left");
+        //map.on("click", function (event) {
+        //  marker1.setLngLat(event.lngLat);
+        // console.log(event.lngLat);
+        //});
+        var element = document.createElement("div");
+        element.id = "marker";
+
+        var marker1 = new tt.Marker({ element: element })
+          .setLngLat([mapLongitude, mapLatitude])
+          .addTo(map);
+        var marker2 = new tt.Marker().setLngLat([longEnd, latEnd]).addTo(map);
+
+        async function calculateRoute(routeOptions, color) {
+          const response = await tt.services.calculateRoute(routeOptions);
+          const geojson = response.toGeoJson();
+
+          map.addLayer({
+            id: color,
+            type: "line",
+            source: {
+              type: "geojson",
+              data: geojson,
+            },
+            layout: {},
+            paint: {
+              "line-color": color,
+              "line-width": 10,
+            },
+          });
+        }
+        function route() {
+          const key = "hmpbWcwGNoHAec7oYA8bXPZxigbqO4Ty";
+          const locations = [marker1.getLngLat(), marker2.getLngLat()];
+
+          calculateRoute({ key: key, locations: locations }, "#2196f3");
+          calculateRoute({
+            key: key,
+            locations: locations,
+            travelMode: "truck",
+            vehicleLoadType: "otherHazmatExplosive",
+            vehicleWeight: 8000,
+          });
+        }
+        route();
+
+        // Function to move the marker smoothly
+        function moveMarkerSmoothly(start, end, duration) {
+          var startTime = new Date().getTime();
+          var interval = setInterval(function () {
+            var elapsedTime = new Date().getTime() - startTime;
+            var progress = elapsedTime / duration;
+            if (progress >= 1) {
+              clearInterval(interval);
+              loop();
+            }
+            var newPosition = [
+              start[0] + (end[0] - start[0]) * progress,
+              start[1] + (end[1] - start[1]) * progress,
+            ];
+            marker1.setLngLat(newPosition);
+            map.setCenter(newPosition);
+          }, 16); // Update every ~16ms for smoother animation (approximately 60 frames per second)
+        }
+
+        // Example: Move the marker smoothly to a new position after 3 seconds
+        var i = 0;
+        var initial = [];
+        var newPosition = [];
+        if (i < coordinates.length) {
+          initial = [mapLongitude, mapLatitude];
+          newPosition = [coordinates[i].lng, coordinates[i].lat];
+        }
+        function loop() {
+          if (i < coordinates.length) {
+            i++;
+            initial = newPosition;
+            newPosition = [coordinates[i].lng, coordinates[i].lat];
+            moveMarkerSmoothly(initial, newPosition, 3000);
+          } else {
+            return;
+          }
+        }
+        loop();
+      } catch (error) {
+        console.log(error);
+      }
+
+      window.addEventListener("load", () => {
+        registerSW();
+      });
+
+      // Register the Service Worker
+      async function registerSW() {
+        if ("serviceWorker" in navigator) {
+          try {
+            await navigator.serviceWorker.register("sw.js");
+          } catch (e) {
+            console.log("SW registration failed");
+          }
+        }
+      }
+
+      //let long = mapLongitude;
+      //let lat = mapLatitude;
+      //setInterval(() => {
+      //	marker.setLngLat([long,lat]);
+      //	map.setCenter([long,lat])
+      //	long=long+0.0001
+      //	lat=lat-0.0001
+      //}, 1000);
+    </script>
+  </body>
+</html>
