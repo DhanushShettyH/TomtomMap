@@ -1,8 +1,8 @@
 	  {
-		"id":"/TomMap/Tomtom.html",
+		"id":"/TomtomMap/index.html",
 		"name":"Tomtom",
 		"short_name":"Tomtom",
-		"start_url":"Tomtom.html",
+		"start_url":"index.html",
 		"display":"standalone",
 		"background_color":"#5900b3",
 		"theme_color":"black",

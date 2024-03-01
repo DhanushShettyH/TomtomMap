@@ -16,12 +16,15 @@
     #marker {
       background-image: url("bus.png");
       background-size: cover;
-      width: 75px;
-      height: 75px;
+      width: 130px;
+      height: 130px;
     }
   </style>
 
   <body style="overflow: hidden">
+	<div style="width:100%; display:flex; justify-content:center; align-item:center;">
+		<h1 style="color:#2196f3">TomTom Map</h1>
+	</div>
     <div style="width: 95%; height: 50%; padding: 50px; overflow: hidden">
       <div id="map" style="min-width: 90%; height: 100%"></div>
     </div>
@@ -78,7 +81,7 @@
           key: "hmpbWcwGNoHAec7oYA8bXPZxigbqO4Ty",
           center: [mapLongitude, mapLatitude],
           container: "map",
-          zoom: 18,
+          zoom: 19,
           style: "./originaljson.json",
         });
         map.addControl(new tt.NavigationControl(), "top-left");
@@ -108,7 +111,7 @@
             layout: {},
             paint: {
               "line-color": color,
-              "line-width": 10,
+              "line-width": 20,
             },
           });
         }
